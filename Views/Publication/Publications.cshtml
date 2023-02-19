@@ -1,0 +1,123 @@
+﻿@model Board.Core.ViewModels.PublicationsViewModel
+@{ ViewData["Title"] = "Publications"; }
+
+<h1 class="mb-3">Moje Ogłoszenia</h1>
+
+@*formularz filtrowania*@
+
+<form id="filterForm">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            @Html.TextBoxFor(x => x.FilterPublications.Title, new { @class = "form-control mb-2", placeholder = "Tytuł" })
+
+        </div>
+        <div class="col-auto">
+            @Html.DropDownListFor(x => x.FilterPublications.CategoryId, new SelectList(Model.Categories, "Id", "Name"),
+                "---wybierz kategorię---", new { @class = "form-control mb-2" })
+        </div>
+        <div class="col-auto">
+            <div class="form-check mb-2">
+                @Html.CheckBoxFor(x => x.FilterPublications.IsExecuted, new { @class = "form-check-label" })
+
+                @Html.LabelFor(x => x.FilterPublications.IsExecuted)
+
+            </div>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Szukaj</button>
+        </div>
+    </div>
+</form>
+
+<div>
+    @await Html.PartialAsync("_PublicationsTable.cshtml", Model)
+
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+
+
+
+        $(document).ready(function () {
+
+            $('#filterForm').submit(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Publications","Publication")",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        $('#publicationsTable').html(data);
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "html"
+                });
+                return false;
+            });
+        });
+
+        function deletePublication(id, btn) {
+            if (!confirm("Czy chcesz usunąć zadanie?"))
+                return;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Delete","Publication")",
+                data: {
+                    id: id
+                },
+                    success: function (data) {
+                        if (data.success) {
+                            var row = btn.parentNode.parentNode;
+                            row.parentNode.removeChild(row);
+                        }
+                        else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "json"
+            });
+
+        }
+
+         function publish(id) {
+            if (!confirm("Czy chcesz opublikować ?"))
+                return;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Publish","Publication")",
+                data: {
+                    id: id
+                },
+                    success: function (data) {
+                        if (data.success) {
+
+                            $("#btnChange").html("Opublikowane");
+                            $("#btnChange").attr("disabled", true);
+
+                        }
+                        else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "json"
+            });
+
+         }
+
+
+    </script>
+
+}

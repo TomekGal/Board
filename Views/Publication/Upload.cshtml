@@ -1,0 +1,45 @@
+﻿
+<body>
+
+    <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="FilesUpload">
+        <span>Wybierz pliki:</span>
+        <input type="file" name="postedFiles" id="files" multiple accept="image/jpeg, image/png" />
+        <input type="submit" value="Upload" />
+        <br /><br />
+
+        <output></output>
+        <br />
+        <span style="color:green">@Html.Raw(ViewBag.Message)</span>
+    </form>
+
+</body>
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+        document.querySelector("#files").addEventListener("change", (e) => {
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+                const files = e.target.files;
+                const output = document.querySelector("output");
+                output.innerHTML = "";
+                for (let i = 0; i < files.length; i++) {
+                    if (!files[i].type.match("image")) continue;
+                    const imgReader = new FileReader();
+                    imgReader.addEventListener("load", function (event) {
+                        const imgFile = event.target;
+                        const img = document.createElement("img");
+                        img.className = "thumbnail"
+                        img.src = imgFile.result
+                        output.appendChild(img);
+                    });
+                    imgReader.readAsDataURL(files[i]);
+
+                    console.log(postedFiles)
+                }
+            } else {
+                alert("Your browser does not support File API");
+            }
+        });
+    </script>
+}

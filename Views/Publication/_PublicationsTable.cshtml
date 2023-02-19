@@ -1,0 +1,81 @@
+﻿@*@model IEnumerable<Board.Core.Models.Domains.Publication>*@
+
+@model Board.Core.ViewModels.PublicationsViewModel
+
+<div id="publicationsTable">
+    
+    <table class="table mt-3 table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Obrazek</th>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Opis</th>
+                <th scope="col">Kategoria</th>
+                <th scope="col">Data</th>
+                <th scope="col">Cena</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+            <tbody>
+                @if (Model != null && Model.Publications.Any())
+                {
+                    foreach (var publication in Model.Publications)
+                    {
+                        List<Tuple<int,string>> publicationImages = Model.ImagesFromFiles.Where(p => p.Item1 == publication.Id).ToList();
+                <tr>
+                    <td class="col-lg-3">
+                        @for (int i = 0; i < publicationImages.Count; i++)
+                        {
+
+
+                            <img class="mb-1" id="image" src="data:image/jpg;base64,@publicationImages.ElementAt(i).Item2" alt="Hmm" width="100" height="100" />
+
+
+                        }
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("Publication","Publication",new { id=publication.Id})" class="font-weight-bold">@publication.Title</a>
+                    </td>
+                    <td class="col-lg-3">@publication.Content</td>
+                    <td>@publication.Category.Name</td>
+                    <td>@publication.PublicationDate?.ToString("dd-MM-yyyy")</td>
+                    <td>@publication.Price</td>
+                    <td>
+                        @if (!publication.IsExecuted)
+                        {
+                            <button id="btnChange" class="btn btn-success btn-sm mr-2"
+                                    onclick="publish('@publication.Id',this)">
+                                Opublikuj
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btn-sm mr-2" disabled
+                                    onclick="publish('@publication.Id',this)">
+                                Opublikowane
+                            </button>
+                        }
+                        <button class="btn btn-danger btn-sm "
+                                onclick="deletePublication('@publication.Id',this)">
+                            Usuń
+                        </button>
+                    </td>
+                </tr> }
+                }
+                else
+                {
+
+                <tr>
+                    <td class="text-center" colspan="5">
+                        Brak ogłoszeń do wyświetlenia!
+                    </td>
+                </tr>
+                }
+
+               
+       </tbody>
+    </table>
+</div>
+
+

@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Board.Core.Models.Domains.Category>
+
+@{ ViewData["Title"] = "Kategorie"; }
+
+<h1 class="mb-3">Moje Kategorie</h1>
+
+<div>
+
+    <table id="catList" class="table mt-3 table-bordered">
+        <thead class="thead-dark">
+            <tr>
+
+                <th scope="col">Kategoria</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var category in Model)
+                {
+<tr>
+
+    <td>
+        @category.Name
+    </td>
+    <td>
+        <button class="btn btn-danger btn-sm "
+                onclick="deleteCategory('@category.Id',this)">
+            Usuń
+        </button>
+    </td>
+
+</tr> }
+            }
+            else
+            {
+<tr>
+    <td class="text-center" colspan="5">
+        Brak kategorii !
+    </td>
+</tr>            }
+        </tbody>
+    </table>
+    <div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newCategory">
+            Nowa Kategoria
+        </button>
+
+        <div class="modal fade" id="newCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nowa Kategoria</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @using (Html.BeginForm("NewCategory", "Task", FormMethod.Post))
+                    {
+        <div class="modal-body">
+
+            @Html.TextBox("newCategory")
+
+        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                            <button class="btn btn-block btn-primary">Dodaj Kategorię</button>
+                        </div>}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        function deleteCategory(id, btn) {
+            if (!confirm("Czy chcesz usunąć kategorię?"))
+                return;
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteCategory", "Task")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "json"
+            });
+        }
+
+    </script>
+}
