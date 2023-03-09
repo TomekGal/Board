@@ -1,6 +1,7 @@
 ﻿using Board.Core;
 using Board.Core.Models.Domains;
 using Board.Core.Service;
+using Board.Core.ViewModels;
 using System.Collections.Generic;
 
 
@@ -18,6 +19,16 @@ namespace Board.Persistence.Services
         public IEnumerable<Publication> Get(string userId, string title = null, int categoryId = 0, bool isExecuted = false)
         {
             return _unitOfWork.Publication.Get(userId, title, categoryId,isExecuted);
+        }
+
+        public IEnumerable<Publication> GetAll(string title = null, int categoryId = 0)
+        {
+            return _unitOfWork.Publication.GetAll( title, categoryId);
+        }
+
+        public IEnumerable<Publication> GetAll()
+        {
+            return _unitOfWork.Publication.GetAll();
         }
 
         public Publication Get(int id, string userId)
@@ -40,15 +51,21 @@ namespace Board.Persistence.Services
        
        
 
-        public void Update(Publication publication)
+        public void Update(PublicationViewModel viewModel)
         {
-            _unitOfWork.Publication.Update(publication);
+            _unitOfWork.Publication.Update(viewModel);
             _unitOfWork.Complete();
         }
 
         public void Publish(int id, string userId)
         {
             _unitOfWork.Publication.Publish( id, userId);
+            _unitOfWork.Complete();
+        }
+
+        public void Remove(int id, string userId)
+        {
+            _unitOfWork.Publication.Remove(id, userId);
             _unitOfWork.Complete();
         }
 

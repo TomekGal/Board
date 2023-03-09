@@ -1,0 +1,32 @@
+﻿@model List<string>
+
+<div>
+
+   
+    <table class="table table-borderless table-responsive-lg">
+        
+        <tbody>
+           
+            <tr>
+                @for (var i = 0; i < @Model.Count; i++)
+                {
+                    <td class="text-center"><img id="image" src="data:image/jpg;base64,@Model.ElementAt(i)" alt="Hmm" width="150" height="150" /></td>
+
+                }
+                </tr>
+           
+            <tr>
+                @for (var i = 0; i < @Model.Count; i++)
+                {
+                <td class="text-center">
+
+                    <input type="button" onclick="Remove(@i)" value="Usuń obrazek" />
+                </td>
+                }
+
+                </tr>
+         
+            </tbody>
+    </table>
+
+</div>

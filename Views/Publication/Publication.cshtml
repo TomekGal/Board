@@ -9,9 +9,13 @@
 
 <h1>@Model.Heading</h1>
 
-<input asp-for="Publication.Id" type="hidden" />
 
-<form asp-controller="Publication" asp-action="Publication" method="post" enctype="multipart/form-data" class="mt-3">
+@*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+<form asp-controller="Publication" asp-action="Publication" asp-antiforgery="true" method="post" enctype="multipart/form-data" class="mt-3">
+
+    <input asp-for="Publication.Id" type="hidden" />
+    
     <div class="form-group row">
         <label asp-for="Publication.Title" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
@@ -39,36 +43,44 @@
             <span asp-validation-for="Publication.Price" class="text-danger"></span>
         </div>
     </div>
-    <div>
-        <img class="mb-1" id="image" src="data:image/jpg;base64,@Model.FilesList.ElementAt(0)" alt="Hmm" width="100" height="100" />
-    </div>
-    <div>
+    @*@if (Model.Heading == "Edytowanie ogłoszenia")
+    {*@
 
-        <input class="col-sm-7" id="filesToUpload" type="file" asp-for="FileModels" multiple accept="image/jpeg,image/png,image/jpg" />
-        <input type="hidden" asp-for="FileModels" />
-        <@*span asp-validation-for="FileModels" class="text-danger"></span>*@
-        <br /><br />
+<div>
+    @await Html.PartialAsync("_EditTableImages.cshtml", Model.FilesList)
 
-    </div>
+</div>
 
+        
 
+    @*}
+    else
+    {*@
+        <div>
 
-    <output class="col-sm-10" id="a"></output>
+            <input class="col-sm-7" id="filesToUpload" type="file" asp-for="FileModels" multiple accept="image/jpeg,image/png,image/jpg" />
+            <input type="hidden" asp-for="FileModels" />
+            <span asp-validation-for="FileModels" class="text-danger"></span>
+            <br /><br />
 
-
+        </div>
+    @*}*@
+    <output class="col-sm-10" id="out"></output>
 
     <button type="submit" class="btn btn-primary btn-lg mt-2">Zapisz</button>
+    <input type="button" value="Cancel" onclick="location.href='@Url.Action("Publications","Publication")';" class="btn btn-secondary btn-lg mt-2" />
+
 </form>
 
  @section Scripts
 {
-        <script type="text/javascript">
+     <script type="text/javascript">
 
 
             document.querySelector("#filesToUpload").addEventListener("change", (e) => {
                 if (window.File && window.FileReader && window.FileList && window.Blob) {
                     const files = e.target.files;
-                    const output = document.querySelector("#a");
+                    const output = document.querySelector("#out");
 
                     output.innerHTML = "";
                     for (let i = 0; i < files.length; i++) {
@@ -92,6 +104,36 @@
             });
 
 
-        </script>
+         function Remove(picNumber) {
+             if (!confirm("Czy chcesz usunąć obrazek?"))
+                 return;
+            alert(picNumber);
+             alert(@Model.Publication.Id)
+             $.ajax({
+                 type: "POST",
+                 url: "@Url.Action("RemovePicture","Publication")",
+                 data: {
+                     id: @Model.Publication.Id,
+                     picNumber: picNumber
+                 },
+                 success: function (data) {
+                     if (data.success) {
+                        
+                         alert("Obrazek usunięty");
+                         location.reload(true);
+                         
+                     }
+                     else {
+                         alert(data.message);
+                     }
+                 },
+                 error: function (data) {
+                     alert(data.message)
+                 },
+                 dataType: "json"
+             });
+         }
+
+     </script>
 
     }

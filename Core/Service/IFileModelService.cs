@@ -13,6 +13,6 @@ namespace Board.Core.Service
          //List<FileModel> GetImages( string userId, int publicationId);
 
         List<string> GetImages(string userId,int pubId);
-
+        void RemovePicture(string userId, int id, int picNumber);
     }
 }

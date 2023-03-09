@@ -26,5 +26,10 @@ namespace Board.Persistence.Services
             return _unitOfWork.FileModel.GetImages(userId, pubId);
 
         }
+
+        public void RemovePicture(string userId, int id, int picNumber)
+        {
+             _unitOfWork.FileModel.RemovePicture(userId,id,picNumber);
+        }
     }
 }

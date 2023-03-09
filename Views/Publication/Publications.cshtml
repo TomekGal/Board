@@ -88,7 +88,7 @@
 
         }
 
-         function publish(id) {
+        function publish(id) {
             if (!confirm("Czy chcesz opublikować ?"))
                 return;
 
@@ -98,24 +98,54 @@
                 data: {
                     id: id
                 },
-                    success: function (data) {
-                        if (data.success) {
+                success: function (data) {
+                    if (data.success) {
 
-                            $("#btnChange").html("Opublikowane");
-                            $("#btnChange").attr("disabled", true);
+                        $("#btnChange").html("Opublikowane");
+                        $("#btnChange").attr("disabled", false);
+                        $("#btnChange").css("color: blue;")
+                        location.reload();
 
-                        }
-                        else {
-                            alert(data.message);
-                        }
-                    },
-                    error: function (data) {
-                        alert(data.message)
-                    },
-                    dataType: "json"
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "json"
             });
+        }
+        function remove(id) {
+            if (!confirm("Czy chcesz wycofać ?"))
+                return;
 
-         }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Remove","Publication")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+
+                        /* $("#btnRemove").html("Wycofaj");*/
+                        $("#btnRemove").attr("disabled", true);
+                        location.reload();
+
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "json"
+            });
+        }
+      
 
 
     </script>

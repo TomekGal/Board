@@ -9,10 +9,7 @@ namespace Board.Core.Models.Domains
 {
     public class Publication
     {
-        public Publication()
-        {
-            //FileModels = new Collection<FileModel>();
-        }
+       
         public int Id { get; set; }
 
         [MaxLength(50)]

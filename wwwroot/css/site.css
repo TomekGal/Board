@@ -89,3 +89,64 @@ output {
     display: inline-block;
 }
 
+/* Modal
+-------------------------------------------------- */
+
+
+
+
+/* Modal Content */
+
+img.hover-shadow {
+    transition: 0.3s;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* The Modal (background) */
+
+
+.modal {
+    display: none;
+    position: center;
+    padding-top: 10px;
+    margin-top:50px;
+    width: 35%;
+    height: 50%;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Modal Content (Image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 350px;
+    height: 350px;
+    
+}
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #303030;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.hide {
+    height: 30px;
+    width: 200px;
+}
+
+    .hide > button {
+        display: none;
+    }
+
+    .hide:hover > button {
+        display: inline;
+    }

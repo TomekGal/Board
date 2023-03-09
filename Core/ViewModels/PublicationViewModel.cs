@@ -15,17 +15,14 @@ namespace Board.Core.ViewModels
         public string Heading { get; set; }
         public Publication Publication { get; set; }
 
-        //[Required(ErrorMessage = "Pole Kategoria jest wymagane")]
-        //[Display(Name = "Kategoria")]
+       
         public IEnumerable<Category> Categories { get; set; }
 
         public List<SelectListItem> CategoriesList { get; set; }
 
         public string Name { get; set; }
 
-        //[Required(ErrorMessage = "Proszę wybrać plik")]
-        //[DataType(DataType.Upload)]
-        //public FileModel FileModel { get; set; }
+        
         public int publicationId { get; set; }
 
         public List<string> FilesList { get; set; }
@@ -33,7 +30,7 @@ namespace Board.Core.ViewModels
         [Required(ErrorMessage = "Proszę wybrać plik")]
         [DataType(DataType.Upload)]
         public List<IFormFile> FileModels { get; set; }
-       
+
 
     }
 }

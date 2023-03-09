@@ -1,0 +1,75 @@
+﻿@model Board.Core.ViewModels.PublicationsViewModel
+@{ ViewData["Title"] = "Publications"; }
+
+<h1 class="mb-3">Ogłoszenia</h1>
+
+@*formularz filtrowania*@
+
+<form id="filterForm">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            @Html.TextBoxFor(x => x.FilterPublications.Title, new { @class = "form-control mb-2", placeholder = "Tytuł" })
+
+        </div>
+        <div class="col-auto">
+            @Html.DropDownListFor(x => x.FilterPublications.CategoryId, new SelectList(Model.Categories, "Id", "Name"),
+                "---wybierz kategorię---", new { @class = "form-control mb-2" })
+        </div>
+       
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Szukaj</button>
+        </div>
+    </div>
+</form>
+
+<div>
+    @await Html.PartialAsync("_PublicationsAllTable.cshtml", Model)
+
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+
+
+
+        $(document).ready(function () {
+
+            $('#filterForm').submit(function () {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("PublicationsAll","Publication")",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        $('#publicationsTable').html(data);
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "html"
+                });
+                return false;
+            });
+        });
+
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("selectedImg");
+     
+        
+        function onImage(image) {
+
+            
+            modal.style.display = "block";
+            modalImg.src = image.src;
+           
+        }
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick=function() {
+       
+            modal.style.display = "none";
+        }
+    </script>
+
+}

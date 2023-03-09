@@ -41,25 +41,30 @@
                     <td>@publication.Category.Name</td>
                     <td>@publication.PublicationDate?.ToString("dd-MM-yyyy")</td>
                     <td>@publication.Price</td>
-                    <td>
+                    <td class="col-lg-2">
                         @if (!publication.IsExecuted)
                         {
-                            <button id="btnChange" class="btn btn-success btn-sm mr-2"
+                            <button id="btnChange" class="btn btn-success btn-sm mr-1"
                                     onclick="publish('@publication.Id',this)">
                                 Opublikuj
                             </button>
                         }
                         else
                         {
-                            <button class="btn btn-success btn-sm mr-2" disabled
+                            <button class="btn btn-info btn-sm mr-2 mb-2" disabled
                                     onclick="publish('@publication.Id',this)">
                                 Opublikowane
+                            </button>
+                            <button id="btnRemove" class="btn btn-success btn-sm mr-2" 
+                                    onclick="remove('@publication.Id',this)">
+                                Wycofaj
                             </button>
                         }
                         <button class="btn btn-danger btn-sm "
                                 onclick="deletePublication('@publication.Id',this)">
                             Usuń
                         </button>
+
                     </td>
                 </tr> }
                 }
