@@ -1,32 +1,23 @@
 ﻿@model List<string>
 
-<div>
+<section class="images">
+    <div class="container">
+        <div class="row ">
+            @for (var i = 0; i < @Model.Count; i++)
+            {
+                <div class="col-sm-4 col-md-2">
+                    <figure>
+                        <img id="image" src="data:image/jpg;base64,@Model.ElementAt(i)"  alt="Hmm" />
+                        <input class="mt-2" type="button" onclick="Remove(@i)" value="Usuń obrazek" />
+                    </figure>
 
-   
-    <table class="table table-borderless table-responsive-lg">
-        
-        <tbody>
-           
-            <tr>
-                @for (var i = 0; i < @Model.Count; i++)
-                {
-                    <td class="text-center"><img id="image" src="data:image/jpg;base64,@Model.ElementAt(i)" alt="Hmm" width="150" height="150" /></td>
+                </div>
+            }
 
-                }
-                </tr>
-           
-            <tr>
-                @for (var i = 0; i < @Model.Count; i++)
-                {
-                <td class="text-center">
+        </div>
+     </div>
 
-                    <input type="button" onclick="Remove(@i)" value="Usuń obrazek" />
-                </td>
-                }
+</section>
 
-                </tr>
-         
-            </tbody>
-    </table>
 
-</div>
+

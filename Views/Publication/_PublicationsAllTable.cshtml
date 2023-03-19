@@ -1,9 +1,7 @@
-﻿@*@model IEnumerable<Board.Core.Models.Domains.Publication>*@
-
-@model Board.Core.ViewModels.PublicationsViewModel
+﻿@model Board.Core.ViewModels.PublicationsViewModel
 
 <div id="publicationsTable">
-    
+
     <table class="table mt-3 table-bordered">
         <thead class="thead-dark">
             <tr>
@@ -13,55 +11,58 @@
                 <th scope="col">Kategoria</th>
                 <th scope="col">Data</th>
                 <th scope="col">Cena</th>
-             </tr>
+                <th></th>
+            </tr>
         </thead>
-            <tbody>
-                @if (Model != null && Model.Publications.Any())
+        <tbody>
+            @if (Model != null && Model.Publications.Any())
+            {
+                foreach (var publication in Model.Publications)
                 {
-                    foreach (var publication in Model.Publications)
-                    {
-                        List<Tuple<int,string>> publicationImages = Model.ImagesFromFiles.Where(p => p.Item1 == publication.Id).ToList();
-                <tr>
-                    <td class="col-lg-4">
-                        @for (int i = 0; i < publicationImages.Count; i++)
-                        {
+                    List<Tuple<int, string>> publicationImages = Model.ImagesFromFiles.Where(p => p.Item1 == publication.Id).ToList();
+                    <tr>
+                        <td class="col-lg-4">
+                            @for (int i = 0; i < publicationImages.Count; i++)
+                            {
 
-                            <img id="image" src="data:image/jpg;base64,@publicationImages.ElementAt(i).Item2" alt="Hmm" height="100" width="100"
-                                 onclick="onImage(this)"  class="hover-shadow" />
-                        }
+                                <img id="image" src="data:image/jpg;base64,@publicationImages.ElementAt(i).Item2" alt="Hmm" height="100" width="100"
+                                     onclick="onImage(this)" />
+                            }
 
-                    <div class="modal" id="myModal">
-                     <span class="close">&times;</span>
-                        
-                        <img class="modal-content" id="selectedImg" />
+                          
 
+                        </td>
 
+                        <td>@publication.Title </td>
+                        <td class="col-lg-3">@publication.Content</td>
+                        <td>@publication.Category.Name</td>
+                        <td>@publication.PublicationDate?.ToString("dd-MM-yyyy")</td>
+                        <td>@publication.Price</td>
+                        <td>
+                            <button class="btn btn-light" id="btnInt" 
+                                    onclick="location.href='@Url.Action("SendInfo", "Publication", new {Id=@publication.Id })'">
+                                Zainteresowany
+                            </button>
+                        </td>
 
-                    </div>
-
-                    </td>
-
-                    <td>@publication.Title </td>
-                    <td class="col-lg-3">@publication.Content</td>
-                    <td>@publication.Category.Name</td>
-                    <td>@publication.PublicationDate?.ToString("dd-MM-yyyy")</td>
-                    <td>@publication.Price</td>
-                    
-                </tr> }
+                    </tr>
                 }
-                else
-                {
+            }
+            else
+            {
 
                 <tr>
                     <td class="text-center" colspan="5">
                         Brak ogłoszeń do wyświetlenia!
                     </td>
                 </tr>
-                }
+            }
 
-               
-       </tbody>
+
+        </tbody>
     </table>
 </div>
+
+
 
 

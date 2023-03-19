@@ -1,4 +1,5 @@
 using Board.Core;
+using Board.Core.Models;
 using Board.Core.Models.Domains;
 using Board.Core.Service;
 using Board.Data;
@@ -38,8 +39,8 @@ namespace Board
             services.AddScoped<IFileModelService, FileModelService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
 
+           
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

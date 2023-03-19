@@ -150,3 +150,21 @@ img.hover-shadow {
     .hide:hover > button {
         display: inline;
     }
+
+    .images {
+
+       
+        text-align: center;
+       padding: 0px;
+    }
+    .image{
+
+        display: inline-block;
+       
+    }
+
+    .images img{
+        width: 100%;
+        height: auto;
+        padding: 2px;
+    }

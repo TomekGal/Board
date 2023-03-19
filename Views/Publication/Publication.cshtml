@@ -107,8 +107,7 @@
          function Remove(picNumber) {
              if (!confirm("Czy chcesz usunąć obrazek?"))
                  return;
-            alert(picNumber);
-             alert(@Model.Publication.Id)
+            
              $.ajax({
                  type: "POST",
                  url: "@Url.Action("RemovePicture","Publication")",

@@ -3,6 +3,7 @@ using Board.Core.Models.Domains;
 using Board.Core.Repositories;
 using Board.Core.ViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Board.Persistence.Repositories
     public class PublicationRepository : IPublicationRepository 
     {
         private IApplicationDbContext _context;
+
+     
       
-       public PublicationRepository(IApplicationDbContext context )
+       public PublicationRepository(IApplicationDbContext context)
         {
             _context = context;
-            
+           
         }
 
       
@@ -37,7 +40,7 @@ namespace Board.Persistence.Repositories
                 if (!string.IsNullOrWhiteSpace(title))
                     publications = publications.Where(x => x.Title.Contains(title));
 
-                return publications.OrderBy(x => x.PublicationDate).ToList();
+                return publications.OrderByDescending(x => x.PublicationDate).ToList();
             }
             else
             {
@@ -50,7 +53,7 @@ namespace Board.Persistence.Repositories
                 if (!string.IsNullOrWhiteSpace(title))
                     publications = publications.Where(x => x.Title.Contains(title));
 
-                return publications.OrderBy(x => x.PublicationDate).ToList();
+                return publications.OrderByDescending(x => x.PublicationDate).ToList();
             }
         }
 
@@ -59,11 +62,10 @@ namespace Board.Persistence.Repositories
 
 
             var publications = _context.Publications.Where(x => x.IsExecuted == true).ToList();
-            //.Include(x => x.Category)
-            //.Where(x => x.IsExecuted == true);
+          
 
 
-            return publications.OrderBy(x => x.PublicationDate).ToList();
+            return publications.OrderByDescending(x => x.PublicationDate).ToList();
 
 
         }
@@ -79,7 +81,7 @@ namespace Board.Persistence.Repositories
             if (!string.IsNullOrWhiteSpace(title))
                 publications = publications.Where(x => x.Title.Contains(title));
 
-            return publications.OrderBy(x => x.PublicationDate).ToList();
+            return publications.OrderByDescending(x => x.PublicationDate).ToList();
 
 
         }
@@ -100,7 +102,7 @@ namespace Board.Persistence.Repositories
         public void Update(PublicationViewModel viewModel)
         {
             var publicationToUpdate = _context.Publications.Single(x => x.Id == viewModel.Publication.Id);
-
+            var filesToUpdate = _context.FileModels.Where(x => x.Id == viewModel.Publication.Id);
             publicationToUpdate.CategoryId = viewModel.Publication.CategoryId;
             publicationToUpdate.Content = viewModel.Publication.Content;
             publicationToUpdate.IsExecuted = viewModel.Publication.IsExecuted;
@@ -108,9 +110,7 @@ namespace Board.Persistence.Repositories
             publicationToUpdate.Title = viewModel.Publication.Title;
             publicationToUpdate.Price = viewModel.Publication.Price;
 
-            FileModelRepository fileModel = new FileModelRepository();
-            Action<IEnumerable<IFormFile>, int> delegateAddImages =  fileModel.AddImages;
-            delegateAddImages(viewModel.FileModels,viewModel.Publication.Id);
+            
            
         }
 
@@ -133,7 +133,14 @@ namespace Board.Persistence.Repositories
             publication.IsExecuted = false;
         }
 
-        
+        public Publication Get(int id)
+        {
+            var publication = _context.Publications
+               .Single(x => x.Id == id );
 
+            return publication;
+        }
+
+       
     }
 }

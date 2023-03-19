@@ -16,6 +16,7 @@ namespace Board.Core.Service
         IEnumerable<Publication> GetAll();
 
         Publication Get(int id, string userId);
+        Publication Get(int id);
 
         void Add(Publication publication);
 

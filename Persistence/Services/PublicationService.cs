@@ -69,6 +69,9 @@ namespace Board.Persistence.Services
             _unitOfWork.Complete();
         }
 
-       
+        public Publication Get(int id)
+        {
+            return _unitOfWork.Publication.Get(id);
+        }
     }
 }

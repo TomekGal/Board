@@ -13,14 +13,16 @@ namespace Board.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IApplicationDbContext _context;
-        
-        public UnitOfWork(IApplicationDbContext context)
+        private IWebHostEnvironment _hostingEnviroment;
+
+        public UnitOfWork(IApplicationDbContext context, IWebHostEnvironment hostingEnviroment)
         {
             _context = context;
-           
-            Publication = new PublicationRepository(context);
+            _hostingEnviroment = hostingEnviroment;
+
+             Publication = new PublicationRepository(context);
             Category = new CategoryRepository(context);
-            FileModel = new FileModelRepository(context);
+            FileModel = new FileModelRepository(context,hostingEnviroment);
 
         }
 

@@ -4,13 +4,13 @@ using Board.Core.Service;
 using Board.Core.ViewModels;
 using Board.Persistence.Extension;
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using Microsoft.AspNetCore.Identity;
+using System.Net.Mail;
+using System.Net;
 
 namespace Board.Controllers
 {
@@ -20,14 +20,21 @@ namespace Board.Controllers
         private readonly IPublicationService _publicationService;
         private readonly ICategoryService _categoryService;
         private readonly IFileModelService _fileModelService;
-      
+        private UserManager<ApplicationUser> _userManager;
+     
 
 
-        public PublicationController(IPublicationService publicationService, ICategoryService categoryService, IFileModelService fileModelService)
+        public PublicationController(IPublicationService publicationService,
+                                      ICategoryService categoryService, 
+                                      IFileModelService fileModelService, 
+                                      UserManager<ApplicationUser> userManager)
+                                     
         {
             _publicationService = publicationService;
             _categoryService = categoryService;
             _fileModelService = fileModelService;
+            _userManager= userManager;
+            
         }
 
 
@@ -35,7 +42,7 @@ namespace Board.Controllers
         [AllowAnonymous]
         public IActionResult PublicationsAll()
         {
-            //var userId = User.GetUserId();
+           
             var tupleList = new Tuple<int, string>(0, "");
 
             var imagesFromFiles = new List<Tuple<int, string>>();
@@ -111,7 +118,7 @@ namespace Board.Controllers
         [AllowAnonymous]
         public IActionResult PublicationsAll(PublicationsViewModel viewModel)
         {
-            //var userId = User.GetUserId();
+      
             var tupleList = new Tuple<int, string>(0, "");
 
             var imagesFromFiles = new List<Tuple<int, string>>();
@@ -153,8 +160,7 @@ namespace Board.Controllers
         public IActionResult Publications(PublicationsViewModel viewModel)
         {
             var userId = User.GetUserId();
-            //var tupleList = new Tuple<int, string>(0, "");
-
+            
             var imagesFromFiles = new List<Tuple<int, string>>();
 
 
@@ -235,18 +241,31 @@ namespace Board.Controllers
             var userId = User.GetUserId();
             viewModel.Publication.UserId = userId;
             var id = viewModel.Publication.Id;
-           var filesList = _fileModelService.GetImages(userId, id);
+           
+            var listImages= _fileModelService.IFileModelToFileModel(viewModel.FileModels,  id);
+
+            var FilesList = new List<string>();
+
+            foreach (var image in listImages)
+            {
+
+                var myImageBase64 = Convert.ToBase64String(image.DataFiles);
+                FilesList.Add(myImageBase64);
+
+            }
+           
 
 
             ModelState.ClearValidationState("FileModels");
             ModelState.MarkFieldValid("FileModels");
             if (!ModelState.IsValid)
                 {
-                    var vm = new PublicationViewModel
+          
+                var vm = new PublicationViewModel
                     {
                         Publication = viewModel.Publication,
                         Heading = viewModel.Publication.Id == 0 ? "Dodawanie nowego ogłoszenia" : "Edytowanie ogłoszenia",
-                        FilesList = filesList
+                        FilesList = FilesList
                     };
 
                     vm.CategoriesList = new List<SelectListItem>();
@@ -270,13 +289,85 @@ namespace Board.Controllers
             }
             else
             {
-                viewModel.FilesList = filesList;
+                viewModel.FilesList = FilesList;
                 _publicationService.Update(viewModel);
+                _fileModelService.AddImages(viewModel.FileModels, id);
 
             }
 
 
             return RedirectToAction("Publications");
+        }
+
+        public IActionResult SendInfo(int id)
+        {
+      
+
+            if (!User.Identity.IsAuthenticated)
+                {
+                    RedirectToAction("_LoginPartial");
+                }
+
+           
+            var publication = _publicationService.Get(id);
+            var userIdOfPublication = publication.UserId;
+            var publicationOwnerEmail = GetUser(userIdOfPublication);
+         
+            
+            var vm = new PublicationViewModel
+            {
+             Publication= new Publication
+              {
+                 Title=publication.Title,
+                 User = new ApplicationUser { Email = publicationOwnerEmail.Email }
+             }
+               
+            };
+            return View(vm);
+           
+           
+        }
+        [HttpPost]
+        public IActionResult SendInfo(PublicationViewModel viewModel)
+        {
+            var senderId = User.GetUserId();
+            var senderEmail = GetUser(senderId).Email;
+            string recipient = viewModel.Publication.User.Email;
+            string subject = viewModel.Publication.Title;
+            string body = viewModel.Info;
+
+            SmtpClient smtp = new SmtpClient();
+
+             smtp.Port = 465;
+            smtp.Host = "smtp.wp.pl";
+            smtp.EnableSsl = true;
+           
+
+            NetworkCredential credential = new NetworkCredential();
+            credential.UserName= "tomaszgaltest@wp.pl";
+            credential.Password= "Skier96100?";
+            smtp.Credentials = credential;
+
+         
+                
+                smtp.Send("tomaszgaltest@wp.pl", recipient, subject, body);
+                smtp.Dispose();
+          
+
+            return RedirectToAction("PublicationsAll");
+
+        }
+
+      
+       
+
+        public ApplicationUser GetUser(string userid)
+        {
+            
+           
+            var user = _userManager.FindByIdAsync(userid);
+            var usermail = user.Result;
+            return usermail;
         }
 
         public IActionResult Categories()

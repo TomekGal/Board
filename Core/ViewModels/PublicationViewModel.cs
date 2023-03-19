@@ -30,7 +30,7 @@ namespace Board.Core.ViewModels
         [Required(ErrorMessage = "Proszę wybrać plik")]
         [DataType(DataType.Upload)]
         public List<IFormFile> FileModels { get; set; }
-
+        public string Info { get; set; }
 
     }
 }

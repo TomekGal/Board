@@ -1,0 +1,53 @@
+﻿@model Board.Core.ViewModels.PublicationViewModel
+@{
+
+
+    ViewBag.Title = "NewMail";
+}
+
+<h2 class="text-center col-md-10 mb-6 ">Wiadomość do sprzedającego</h2>
+
+
+@using (Html.BeginForm("SendInfo", "Publication"))
+{
+    @Html.AntiForgeryToken()
+    <div class="row" >
+
+        <div class="col-md-10 mb-6">
+
+
+            <div class="form-group col-md-10 mb-6">
+                @Html.LabelFor(x => x.Publication.UserId, "Wyślij do")
+
+                @Html.TextBoxFor(x => x.Publication.User.Email, new { @Model.Publication.UserId })
+                @Html.ValidationMessageFor(x => x.Publication.UserId)
+
+            </div>
+            <div class="row ">
+                <div class="form-group col-md-10 mb-6 ">
+                    @Html.LabelFor(x => x.Publication.Title, new { @class = "form-check-label" })
+
+                    @Html.TextBoxFor(x => x.Publication.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Publication.Title)
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="form-group col-md-10 mb-6 ">
+                    @Html.LabelFor(x => x.Info, new { @class = "form-check-label" })
+
+                    @Html.TextAreaFor(x => x.Info, new { @class = "form-control", style = "height:300px" })
+                    @Html.ValidationMessageFor(x => x.Info)
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" name="cancel" value="Cancel" class="btn btn-outline-primary mb-3 " onclick="location.href='@Url.Action("PublicationsAll", "Publication")'"><i class="fa fa-cancel">  Anuluj</i></button>
+                <button type="submit" name="send" value="Send" class="btn btn-outline-primary mb-3 "><i class="fa fa-envelope">  Wyślij</i></button>
+            </div>
+
+
+        </div>
+    </div>
+
+}
+

@@ -16,18 +16,7 @@ namespace Board.Persistence.Services
         {
             _unitOfWork = unitOfWork;
         }
-        //public void Add(Category category)
-        //{
-        //    _unitOfWork.Category.Add(category);
-        //    _unitOfWork.Complete();
-        //}
-
-        //public void Delete(int id, string userId)
-        //{
-        //    _unitOfWork.Category.Delete(id, userId);
-        //    _unitOfWork.Complete();
-
-        //}
+        
 
 
 
@@ -41,10 +30,6 @@ namespace Board.Persistence.Services
             return _unitOfWork.Category.Get(id);
         }
 
-        //public void Update(Category category)
-        //{
-        //    _unitOfWork.Category.Update(category);
-        //    _unitOfWork.Complete();
-        //}
+     
     }
 }

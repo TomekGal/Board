@@ -14,5 +14,8 @@ namespace Board.Core.Service
 
         List<string> GetImages(string userId,int pubId);
         void RemovePicture(string userId, int id, int picNumber);
+
+        public List<FileModel> IFileModelToFileModel(IEnumerable<IFormFile> IFileModels, int id);
+        public void TempFile(List<string> filesList);
     }
 }

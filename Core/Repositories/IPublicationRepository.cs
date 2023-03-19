@@ -16,6 +16,7 @@ namespace Board.Core.Repositories
         IEnumerable<Publication> GetAll(string title = null, int categoryId = 0);
 
         Publication Get(int id, string userId);
+        Publication Get(int id);
 
         void Add(Publication publication);
 
